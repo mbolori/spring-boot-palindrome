@@ -15,6 +15,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.boot.context.event.SpringApplicationEvent;
 import org.springframework.boot.system.ApplicationPidFileWriter;
+import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -28,6 +29,7 @@ import org.springframework.context.ConfigurableApplicationContext;
  * if pidfile is removed, application will be stopped
  */
 @SpringBootApplication
+@EnableEurekaClient
 public class MainClass {
 
     public static final String APPLICATION_PID_FILENAME = "application.pid";

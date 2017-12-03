@@ -19,4 +19,6 @@ public interface PalindromeRepository {
     public Palindrome remove(String id);
     
     public void removeAll();
+    
+    public Palindrome isStored(String text);
 }

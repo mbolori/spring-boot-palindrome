@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.UUID;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
@@ -47,21 +48,37 @@ public class InMemoryPalindromeRepositoryImpl implements PalindromeRepository{
     @Override
     public Palindrome store(CheckPalindromeRequest request) {
         w.lock();
+        Palindrome palindrome;
         try {
-            Palindrome palindrome 
-                        = Palindrome.fromRequest(request)
-                            .setId(UUID.randomUUID().toString())
-                            .setDate(new Date())
-                                .build();
-            
-            storage.put(palindrome.getId(), palindrome);
-            log.info("Stored Palindrome on map: " + palindrome);
-            return palindrome;
+        	//CHECK this palindrome is not already stored ...
+        	if ((palindrome = isStored(request.getText())) != null) {
+        		log.info("Already stored on map.");
+        		return palindrome;
+        	} else {
+                palindrome 
+                	= Palindrome.fromRequest(request)
+                    	.setId(UUID.randomUUID().toString())
+                    	.setDate(new Date())
+                        .build();
+    
+                storage.put(palindrome.getId(), palindrome);
+                log.info("Stored Palindrome on map: " + palindrome);
+                return palindrome;
+        	}
         } finally {
             w.unlock();
         }
     }
 
+    @Override
+    public Palindrome isStored(String text) {
+    	for (Entry<String, Palindrome> entry : storage.entrySet()) {
+    		if (text.equals(entry.getValue().getText()))
+    			return entry.getValue();
+    	}
+    	return null;
+    }
+    
     /**
      * @see com.example.palindrome.repository.PalindromeRepository#getAllPalindrome()
      *

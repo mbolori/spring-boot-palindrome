@@ -4,7 +4,7 @@
 
 	<groupId>com.example</groupId>
 	<artifactId>spring-boot-palindrome</artifactId>
- 	<version>0.0.1-SNAPSHOT</version>
+ 	<version>1.0.0-SNAPSHOT</version>
 
 	<parent>
     	<groupId>org.springframework.boot</groupId>
@@ -45,6 +45,26 @@
           <groupId>org.springframework.boot</groupId>
           <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>  
+
+		<!-- Spring cloud Eureka deps -->
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-eureka</artifactId>
+			<version>1.3.5.RELEASE</version>
+        	<exclusions>
+            	<exclusion>
+            		<!--  it is packaged with 0.7.4 version that gives problems -->
+                	<groupId>com.netflix.archaius</groupId>
+                	<artifactId>archaius-core</artifactId>
+            	</exclusion>
+        	</exclusions>
+		</dependency>
+
+    	<dependency>
+        	<groupId>com.netflix.archaius</groupId>
+        	<artifactId>archaius-core</artifactId>
+        	<version>0.7.1</version>
+    	</dependency>
 
 		<dependency>
 			<groupId>com.google.guava</groupId>

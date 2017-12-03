@@ -2,6 +2,7 @@ package com.example.palindrome;
 
 import java.io.IOException;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicLong;
 
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.container.ContainerRequestContext;
@@ -91,9 +92,11 @@ public class JerseyConfiguration extends ResourceConfig {
 
         public static final String RequestId = "RequestId";
         
+        private AtomicLong counter = new AtomicLong(1);
+        
         @Override
         public void filter(ContainerRequestContext requestContext) throws IOException {
-            MDC.put(RequestId, UUID.randomUUID()); 
+            MDC.put(RequestId, counter.getAndIncrement()); 
         }
         
     }
