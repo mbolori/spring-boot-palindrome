@@ -1,0 +1,46 @@
+spring:
+  profiles.active: production
+
+---
+
+
+info:
+  app:
+    name: spring-boot-palindrome
+    description: Check and store palindromes
+    version: 0.0.1
+    mode: default
+
+endpoints:
+  info:
+    enabled: true
+    sensitive: false
+
+  health:
+    sensitive: false
+    
+  metrics:
+    sensitive: false
+
+server:
+    port:     9305
+
+spring:
+    profiles: production
+    application:
+        name: spring-boot-palindrome 
+    cache:
+        cache-names: palindromeCache
+        guava:
+            spec: maximumSize=500
+
+palindromeConfiguration:
+     # 2 choices: OPTIMUM, FULL_STRING 
+     strategy            : OPTIMUM
+     
+     # can be remotely configured?
+     remoteConfiguration : true
+ 
+     #Secure delete endpoint
+     #enableSecurity     : true    
+     
