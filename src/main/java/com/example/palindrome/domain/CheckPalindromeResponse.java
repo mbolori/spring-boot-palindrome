@@ -1,7 +1,13 @@
 package com.example.palindrome.domain;
 
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
+
 import java.io.IOException;
 import java.io.StringWriter;
+
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.ResourceSupport;
+import org.springframework.hateoas.jaxrs.JaxRsLinkBuilder;
 
 import com.example.palindrome.service.JsonException;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -12,14 +18,19 @@ import com.fasterxml.jackson.databind.SerializationFeature;
  * Outbound Json content containing palindrome check result.
  * It follows Java Beans convention to perform POJO to JSON serialization.
  *
+ *  links : [ { rel : "self",   href : "http://localhost:9100/spring-boot-palindrome/api/palindromes/<id>" },
+ *            { rel : "delete_palindrome_<id>", href : "http://localhost:9100/spring-boot-palindrome/api/palindromes/<id>" },  
+ *            { rel : "delete_palindrome_all", href : "http://localhost:9100/spring-boot-palindrome/api/palindromes" },
+ *            { rel : "get_palindrome_all", href : "http://localhost:9100/spring-boot-palindrome/api/palindromes" },
+ *  ]
  */
-public class CheckPalindromeResponse{
+public class CheckPalindromeResponse extends ResourceSupport {
 
     @JsonProperty("palindrome")
     private boolean palindrome = false;
     
-    @JsonProperty("id")
-    private String id;
+    @JsonProperty("palindromeId")
+    private String palindromeId;
     
     @JsonProperty("text")
     private String text;
@@ -44,7 +55,7 @@ public class CheckPalindromeResponse{
      */
     public CheckPalindromeResponse(boolean palindrome, String text, String id) {
         this(palindrome, text);
-        this.id = id;
+        this.palindromeId = id;
     }
     
     /**
@@ -61,8 +72,8 @@ public class CheckPalindromeResponse{
      *
      * @return the id
      */
-    public String getId() {
-        return id;
+    public String getPalindromeId() {
+        return palindromeId;
     }
 
     /**
@@ -81,6 +92,7 @@ public class CheckPalindromeResponse{
      * @throws JsonException - In case of error during serialization.
      */
     public String toJson() throws JsonException {
+        setupLinks();
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(SerializationFeature.INDENT_OUTPUT,true);
         mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS,false);
@@ -94,6 +106,20 @@ public class CheckPalindromeResponse{
         }
     }
     
+    protected void setupLinks() {
+        if (this.isPalindrome()) {
+            //enrich with links
+            Link selfLink =  linkTo(JaxRsLinkBuilder.class).slash(this.getPalindromeId()).withSelfRel();            
+            Link getAllLink = linkTo(JaxRsLinkBuilder.class).withRel("get_palindrome_all");
+            Link deleteLink = linkTo(JaxRsLinkBuilder.class).slash(this.getPalindromeId()).withRel("delete_palindrome_" + this.getPalindromeId());
+            Link deleteAllLink = linkTo(JaxRsLinkBuilder.class).withRel("delete_palindrome_all");
+            this.add(selfLink);
+            this.add(getAllLink);
+            this.add(deleteLink);
+            this.add(deleteAllLink);
+        }
+    }
+    
     /**
      * @see java.lang.Object#toString()
      *
@@ -102,7 +128,7 @@ public class CheckPalindromeResponse{
     @Override
     public String toString() {
         StringBuilder builder2 = new StringBuilder();
-        builder2.append("CheckPalindromeResponse [palindrome=").append(palindrome).append(", id=").append(id).append(", text=").append(text).append("]");
+        builder2.append("CheckPalindromeResponse [palindrome=").append(palindrome).append(", palindromeId=").append(palindromeId).append(", text=").append(text).append("]");
         return builder2.toString();
     }
 
@@ -120,8 +146,8 @@ public class CheckPalindromeResponse{
      *
      * @param id the new id
      */
-    public void setId(String id) {
-        this.id = id;
+    public void setPalindromeId(String id) {
+        this.palindromeId = id;
     }
 
     /**

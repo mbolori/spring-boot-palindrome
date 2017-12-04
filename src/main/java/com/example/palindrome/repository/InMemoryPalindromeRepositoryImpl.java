@@ -69,7 +69,7 @@ public class InMemoryPalindromeRepositoryImpl implements PalindromeRepository{
                     	.setDate(new Date())
                         .build();
     
-                storage.put(palindrome.getId(), palindrome);
+                storage.put(palindrome.getPalindromeId(), palindrome);
                 log.info("Stored Palindrome on map: " + palindrome);
                 return palindrome;
         	}

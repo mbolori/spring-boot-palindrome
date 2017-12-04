@@ -60,7 +60,7 @@ public class PalindromeServiceImpl implements PalindromeService{
         if (isPalindrome) {
             log.info("Text:" + request.getText() + " is palindrome, storing. ");
             Palindrome palindrome = repository.store(request);
-            return new CheckPalindromeResponse(true, request.getText(), palindrome.getId());          
+            return new CheckPalindromeResponse(true, request.getText(), palindrome.getPalindromeId());          
         } else {
             log.info("Text: " + request.getText() + " is not palindrome");
             return new CheckPalindromeResponse(false, request.getText());

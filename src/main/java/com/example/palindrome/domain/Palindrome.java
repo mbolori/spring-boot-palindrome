@@ -1,9 +1,15 @@
 package com.example.palindrome.domain;
 
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
+
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.Collection;
 import java.util.Date;
+
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.ResourceSupport;
+import org.springframework.hateoas.jaxrs.JaxRsLinkBuilder;
 
 import com.example.palindrome.service.JsonException;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -18,11 +24,18 @@ import com.fasterxml.jackson.databind.SerializationFeature;
  *   text - palindrome's text
  *   user - which user added that palindrome
  *   date - when was added the palindrome
+ *   
+ *  links : [ { rel : "get_palindrome_<id>"   , href : "http://localhost:9100/spring-boot-palindrome/api/palindromes/<id>" },
+ *            { rel : "get_palindrome_all"    , href : "http://localhost:9100/spring-boot-palindrome/api/palindromes" }
+ *            { rel : "delete_palindrome_<id>", href : "http://localhost:9100/spring-boot-palindrome/api/palindromes/<id>" },  
+ *            { rel : "delete_palindrome_all" , href : "http://localhost:9100/spring-boot-palindrome/api/palindromes" },
+ *            { rel : "check_palindrome"      , href : "http://localhost:9100/spring-boot-palindrome/api/palindromes" },
+ *  ]
  *     
  */
-public class Palindrome {
-    @JsonProperty("id")
-    private String id;
+public class Palindrome extends ResourceSupport{
+    @JsonProperty("palindromeId")
+    private String palindromeId;
     
     @JsonProperty("text")
     private String text;
@@ -46,7 +59,7 @@ public class Palindrome {
      * @param builder the builder
      */
     public Palindrome(Builder builder) {
-        this.id = builder.id;
+        this.palindromeId = builder.id;
         this.text = builder.text;
         this.user = builder.user;
         this.date = builder.date;
@@ -124,8 +137,8 @@ public class Palindrome {
      *
      * @return the id
      */
-    public String getId() {
-        return id;
+    public String getPalindromeId() {
+        return palindromeId;
     }
 
     /**
@@ -162,6 +175,16 @@ public class Palindrome {
      * @throws JsonException - exception during serialization.
      */
     public String toJson() throws JsonException {
+        //enrich with links
+        Link selfLink =  linkTo(JaxRsLinkBuilder.class).slash(this.getPalindromeId()).withSelfRel();
+        Link getAllLink = linkTo(JaxRsLinkBuilder.class).withRel("get_palindrome_all");
+        Link deleteLink = linkTo(JaxRsLinkBuilder.class).slash(this.getPalindromeId()).withRel("delete_palindrome_" + this.getPalindromeId());
+        Link deleteAllLink = linkTo(JaxRsLinkBuilder.class).withRel("delete_palindrome_all");
+        this.add(selfLink);
+        this.add(getAllLink);
+        this.add(deleteLink);
+        this.add(deleteAllLink);
+        
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(SerializationFeature.INDENT_OUTPUT,true);
         mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS,false);
@@ -183,6 +206,14 @@ public class Palindrome {
      * @throws JsonException - exception during serialization.
      */
     public static String toJsonCollection(Collection<Palindrome> palindromeCollection) throws JsonException {
+        //enrich with links
+        for (Palindrome pal : palindromeCollection) {
+            Link selfLink =  linkTo(JaxRsLinkBuilder.class).slash(pal.getPalindromeId()).withSelfRel();
+            Link deleteLink = linkTo(JaxRsLinkBuilder.class).slash(pal.getPalindromeId()).withRel("delete_palindrome_" + pal.getPalindromeId());
+            pal.add(selfLink);
+            pal.add(deleteLink);
+        }
+        
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(SerializationFeature.INDENT_OUTPUT,true);
         mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS,false);
@@ -196,6 +227,7 @@ public class Palindrome {
         }
     }
     
+    
     /**
      * @see java.lang.Object#toString()
      *
@@ -204,7 +236,7 @@ public class Palindrome {
     @Override
     public String toString() {
         StringBuilder builder2 = new StringBuilder();
-        builder2.append("Palindrome [id=").append(id).append(", text=").append(text).append(", user=").append(user).append(", date=").append(date).append("]");
+        builder2.append("Palindrome [palindromeId=").append(palindromeId).append(", text=").append(text).append(", user=").append(user).append(", date=").append(date).append("]");
         return builder2.toString();
     }
     

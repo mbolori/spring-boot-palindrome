@@ -25,7 +25,6 @@ import com.example.palindrome.domain.Palindrome;
 import com.example.palindrome.service.JsonException;
 import com.example.palindrome.service.PalindromeServiceException;
 import com.example.palindrome.service.api.PalindromeService;
-
 /**
  * JAX-RS Resource class. It presents several endpoints mapped to URL: /spring-boot-palindrome/api/palindromes
  */
