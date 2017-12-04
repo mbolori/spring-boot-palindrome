@@ -20,13 +20,16 @@ import com.example.palindrome.domain.Palindrome;
 import com.google.common.base.Strings;
 
 /**
- * @author gzml7g
- *
+ * In memory representation of a PalindromeRepository.
+ * Storage is implemented as a Map. Map is not thread-safe but it is made of immutable Palindrome. Besides composite operations require held proper lock
+ * therefore implementation can be considered thread-safe.
+ * Write operations (store, remove, removeAll) held write lock. Only one can held that lock. Read locks are forbidden during duration of those operations.
+ * Read operations  (isStored, getAllPalindrome, getPalindromeById) held read lock. Many read locks at the same time are allowed.
+ * Domain-Driven design repository layer.
  */
 @Repository
 public class InMemoryPalindromeRepositoryImpl implements PalindromeRepository{
 
-    /** Map is not threadsabe but it is made of immutable Palindrome. Besides composite operations requires held proper method */
     private Map<String, Palindrome> storage = new HashMap<>();
     
     private final ReadWriteLock lock = new ReentrantReadWriteLock();
@@ -37,13 +40,18 @@ public class InMemoryPalindromeRepositoryImpl implements PalindromeRepository{
     
     private final Logger log = LoggerFactory.getLogger(InMemoryPalindromeRepositoryImpl.class);
     
+    /**
+     * Instantiates a new in memory palindrome repository impl.
+     */
     public InMemoryPalindromeRepositoryImpl() {
     }
+    
     /**
-     * @see com.example.palindrome.repository.PalindromeRepository#store(com.example.palindrome.domain.CheckPalindromeRequest)
+     * Store.
      *
-     * @param request
-     * @return
+     * @param request the request
+     * @return the palindrome
+     * @see com.example.palindrome.repository.PalindromeRepository#store(com.example.palindrome.domain.CheckPalindromeRequest)
      */
     @Override
     public Palindrome store(CheckPalindromeRequest request) {
@@ -70,6 +78,12 @@ public class InMemoryPalindromeRepositoryImpl implements PalindromeRepository{
         }
     }
 
+    /**
+     * @see com.example.palindrome.repository.PalindromeRepository#isStored(java.lang.String)
+     *
+     * @param text
+     * @return
+     */
     @Override
     public Palindrome isStored(String text) {
     	for (Entry<String, Palindrome> entry : storage.entrySet()) {
@@ -80,9 +94,10 @@ public class InMemoryPalindromeRepositoryImpl implements PalindromeRepository{
     }
     
     /**
-     * @see com.example.palindrome.repository.PalindromeRepository#getAllPalindrome()
+     * Gets the all palindrome.
      *
-     * @return
+     * @return the all palindrome
+     * @see com.example.palindrome.repository.PalindromeRepository#getAllPalindrome()
      */
     @Override
     public Collection<Palindrome> getAllPalindrome() {
@@ -96,10 +111,11 @@ public class InMemoryPalindromeRepositoryImpl implements PalindromeRepository{
     }
 
     /**
-     * @see com.example.palindrome.repository.PalindromeRepository#getPalindromeById(java.lang.String)
+     * Gets the palindrome by id.
      *
-     * @param id
-     * @return
+     * @param id the id
+     * @return the palindrome by id
+     * @see com.example.palindrome.repository.PalindromeRepository#getPalindromeById(java.lang.String)
      */
     @Override
     public Palindrome getPalindromeById(String id) {
@@ -114,10 +130,13 @@ public class InMemoryPalindromeRepositoryImpl implements PalindromeRepository{
             r.unlock();
         }
     }
+    
     /**
-     * @see com.example.palindrome.repository.PalindromeRepository#remove(java.lang.String)
+     * Removes the.
      *
-     * @param id
+     * @param id the id
+     * @return the palindrome
+     * @see com.example.palindrome.repository.PalindromeRepository#remove(java.lang.String)
      */
     @Override
     public Palindrome remove(String id) {
@@ -130,9 +149,11 @@ public class InMemoryPalindromeRepositoryImpl implements PalindromeRepository{
        }
         
     }
+    
     /**
-     * @see com.example.palindrome.repository.PalindromeRepository#removeAll()
+     * Removes the all.
      *
+     * @see com.example.palindrome.repository.PalindromeRepository#removeAll()
      */
     @Override
     public void removeAll() {

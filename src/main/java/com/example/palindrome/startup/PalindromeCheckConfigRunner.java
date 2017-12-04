@@ -1,8 +1,3 @@
-/*******************************************************************************
-* File : PalindromeCheckConfigRunner.java<br>
-* created at : Nov 30, 2017<br>
-* created by : gzml7g<br>
-******************************************************************************/
 package com.example.palindrome.startup;
 
 import org.slf4j.Logger;
@@ -18,7 +13,7 @@ import com.example.palindrome.configuration.PalindromeConfiguration;
 
 
 /**
- * Check config or just show configuration loaded ...
+ * Display application specific configuration.
  */
 @Component
 @Order(Ordered.HIGHEST_PRECEDENCE)
@@ -26,9 +21,16 @@ public class PalindromeCheckConfigRunner implements ApplicationRunner{
 
     private final static Logger log = LoggerFactory.getLogger(PalindromeCheckConfigRunner.class);
 
+    /** The config. */
     @Autowired
     PalindromeConfiguration config;
     
+    /**
+     * @see org.springframework.boot.ApplicationRunner#run(org.springframework.boot.ApplicationArguments)
+     *
+     * @param args
+     * @throws Exception
+     */
     @Override
     public void run(ApplicationArguments args) throws Exception {
         log.info("Checking config ...");

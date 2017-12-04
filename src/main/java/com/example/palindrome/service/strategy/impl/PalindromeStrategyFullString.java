@@ -3,15 +3,16 @@ package com.example.palindrome.service.strategy.impl;
 import com.example.palindrome.service.strategy.PalindromeStrategy;
 
 /**
- *
+ * The Class PalindromeStrategyOptimum implements PalindromeStrategy reversing text and comparing original against reversed one.
  */
 public class PalindromeStrategyFullString implements PalindromeStrategy {
 
     /**
-     * @see com.example.palindrome.service.strategy.PalindromeStrategy#isPalindrome(java.lang.String)
+     * Checks if is palindrome.
      *
-     * @param text
-     * @return
+     * @param text the text
+     * @return true, if is palindrome
+     * @see com.example.palindrome.service.strategy.PalindromeStrategy#isPalindrome(java.lang.String)
      */
     @Override
     public boolean isPalindrome(String text) {
@@ -25,6 +26,11 @@ public class PalindromeStrategyFullString implements PalindromeStrategy {
             return false;
     }
 
+    /**
+     * @see java.lang.Object#toString()
+     *
+     * @return
+     */
     @Override
     public String toString() {
         return "FULL_STRING Strategy";

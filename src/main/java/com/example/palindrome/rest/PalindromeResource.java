@@ -27,7 +27,7 @@ import com.example.palindrome.service.PalindromeServiceException;
 import com.example.palindrome.service.api.PalindromeService;
 
 /**
- *
+ * JAX-RS Resource class. It presents several endpoints mapped to URL: /spring-boot-palindrome/api/palindromes
  */
 @Component
 @Path("/palindromes")
@@ -35,12 +35,21 @@ public class PalindromeResource {
  
     private final Logger log = LoggerFactory.getLogger(PalindromeResource.class);
     
+    /** The req. */
     @Context
     protected HttpServletRequest req;
     
     @Autowired
     private PalindromeService service;
     
+    /**
+     * Check if text is a palindrome.
+     *
+     * @param json the json
+     * @return the response
+     * @throws JsonException the json exception
+     * @throws PalindromeServiceException the palindrome service exception
+     */
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
@@ -51,6 +60,12 @@ public class PalindromeResource {
     }
     
     
+    /**
+     * Gets the all palindrome.
+     *
+     * @return the all palindrome
+     * @throws JsonException the json exception
+     */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllPalindrome() throws JsonException {
@@ -59,6 +74,14 @@ public class PalindromeResource {
         return Response.ok(Palindrome.toJsonCollection(palindromeList)).build();
     }
     
+    /**
+     * Gets the palindrome by id.
+     *
+     * @param id the id
+     * @return the palindrome by id
+     * @throws PalindromeServiceException the palindrome service exception
+     * @throws JsonException the json exception
+     */
     @GET
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -68,6 +91,11 @@ public class PalindromeResource {
         return Response.ok(palindrome.toJson()).build();
     }
     
+    /**
+     * Delete all palindrome.
+     *
+     * @return the response
+     */
     @DELETE
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
@@ -78,6 +106,13 @@ public class PalindromeResource {
     }
     
     
+    /**
+     * Delete palindrome by id.
+     *
+     * @param id the id
+     * @return the response
+     * @throws PalindromeServiceException the palindrome service exception
+     */
     @DELETE
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)

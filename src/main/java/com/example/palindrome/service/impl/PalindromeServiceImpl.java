@@ -23,24 +23,29 @@ import com.example.palindrome.service.strategy.impl.PalindromeStrategyOptimum;
 import com.google.common.base.Strings;
 
 /**
- * @author gzml7g
- *
+ * The Class PalindromeServiceImpl.
+ * Domain-Driven design repository layer.
  */
 @Service
 public class PalindromeServiceImpl implements PalindromeService{
 
     private final Logger log = LoggerFactory.getLogger(PalindromeServiceImpl.class);
     
+    /** The config. */
     @Autowired
     PalindromeConfiguration config;
     
+    /** The repository. */
     @Autowired
     PalindromeRepository repository;
     
     /**
-     * @see com.example.palindrome.service.api.PalindromeService#isPalindrome()
+     * Check if palindrome.
      *
-     * @return
+     * @param request the request
+     * @return the check palindrome response
+     * @throws PalindromeServiceException the palindrome service exception
+     * @see com.example.palindrome.service.api.PalindromeService#isPalindrome()
      */
     @Override
     public CheckPalindromeResponse checkIfPalindrome(CheckPalindromeRequest request) throws PalindromeServiceException {
@@ -63,8 +68,10 @@ public class PalindromeServiceImpl implements PalindromeService{
     }
 
     /**
-     * @see com.example.palindrome.service.api.PalindromeService#getAllPalindrome()
+     * Gets the all palindrome.
      *
+     * @return the all palindrome
+     * @see com.example.palindrome.service.api.PalindromeService#getAllPalindrome()
      */
     @Override
     public Collection<Palindrome> getAllPalindrome() {
@@ -73,10 +80,12 @@ public class PalindromeServiceImpl implements PalindromeService{
     }
 
     /**
-     * @see com.example.palindrome.service.api.PalindromeService#getPalindromeById(java.lang.String)
+     * Gets the palindrome by id.
      *
-     * @param id
-     * @throws PalindromeServiceException 
+     * @param id the id
+     * @return the palindrome by id
+     * @throws PalindromeServiceException the palindrome service exception
+     * @see com.example.palindrome.service.api.PalindromeService#getPalindromeById(java.lang.String)
      */
     @Override
     public Palindrome getPalindromeById(String id) throws PalindromeServiceException {
@@ -93,8 +102,9 @@ public class PalindromeServiceImpl implements PalindromeService{
     }
 
     /**
-     * @see com.example.palindrome.service.api.PalindromeService#deleteAllPalindrome()
+     * Removes the all palindrome.
      *
+     * @see com.example.palindrome.service.api.PalindromeService#deleteAllPalindrome()
      */
     @Override
     public void removeAllPalindrome() {
@@ -103,9 +113,11 @@ public class PalindromeServiceImpl implements PalindromeService{
     }
 
     /**
-     * @throws PalindromeServiceException 
-     * @see com.example.palindrome.service.api.PalindromeService#deletePalindromeById()
+     * Removes the palindrome by id.
      *
+     * @param id the id
+     * @throws PalindromeServiceException the palindrome service exception
+     * @see com.example.palindrome.service.api.PalindromeService#deletePalindromeById()
      */
     @Override
     public void removePalindromeById(String id) throws PalindromeServiceException {

@@ -27,13 +27,21 @@ import org.springframework.context.ConfigurableApplicationContext;
  * Create pidfile on working dir when starting.
  * if pidfile is present, application cannot start
  * if pidfile is removed, application will be stopped
+ * 
+ * TODO: Below features should be moved to a parent project (with common dependencies included)
  */
 @SpringBootApplication
 @EnableEurekaClient
 public class MainClass {
 
+    /** The Constant APPLICATION_PID_FILENAME. */
     public static final String APPLICATION_PID_FILENAME = "application.pid";
     
+    /**
+     * The main method.
+     *
+     * @param args the arguments
+     */
     public static void main(String []args) {
         System.out.println("Starting app...");
         File pidFile = new File(APPLICATION_PID_FILENAME);
@@ -64,12 +72,21 @@ public class MainClass {
         
         private ApplicationContext context = null; 
         
+        /**
+         * Instantiates a new pid watcher.
+         *
+         * @param pid the pid
+         */
         public PidWatcher(File pid) {
             this.pidFile = pid;
         }
 
+
         /**
          * When app is ready (fully started) set up WatchService for deletion events on pidfile.
+         *
+         * @param event the event
+         * @see org.springframework.context.ApplicationListener#onApplicationEvent(org.springframework.context.ApplicationEvent)
          */
         @Override
         public void onApplicationEvent(SpringApplicationEvent event) {
@@ -83,10 +100,20 @@ public class MainClass {
             }
         }
         
+        /**
+         * Sets the application context.
+         *
+         * @param context the new application context
+         */
         public void setApplicationContext(ApplicationContext context) {
             this.context = context;
         }
         
+        /**
+         * Run.
+         *
+         * @see java.lang.Runnable#run()
+         */
         @Override
         public void run() {
             try {

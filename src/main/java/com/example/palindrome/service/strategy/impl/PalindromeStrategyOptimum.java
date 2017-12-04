@@ -3,15 +3,16 @@ package com.example.palindrome.service.strategy.impl;
 import com.example.palindrome.service.strategy.PalindromeStrategy;
 
 /**
- *
+ * The Class PalindromeStrategyOptimum implements PalindromeStrategy in the most optimum way.
  */
 public class PalindromeStrategyOptimum implements PalindromeStrategy{
 
     /**
-     * @see com.example.palindrome.service.strategy.PalindromeStrategy#isPalindrome(java.lang.String)
+     * Checks if is palindrome.
      *
-     * @param text
-     * @return
+     * @param text the text
+     * @return true, if is palindrome
+     * @see com.example.palindrome.service.strategy.PalindromeStrategy#isPalindrome(java.lang.String)
      */
     @Override
     public boolean isPalindrome(String text) {
@@ -28,6 +29,11 @@ public class PalindromeStrategyOptimum implements PalindromeStrategy{
         return true;
     }
     
+    /**
+     * @see java.lang.Object#toString()
+     *
+     * @return
+     */
     @Override
     public String toString() {
         return "OPTIMUM Strategy";

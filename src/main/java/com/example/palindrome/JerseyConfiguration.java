@@ -1,7 +1,6 @@
 package com.example.palindrome;
 
 import java.io.IOException;
-import java.util.UUID;
 import java.util.concurrent.atomic.AtomicLong;
 
 import javax.ws.rs.ApplicationPath;
@@ -24,13 +23,12 @@ import com.example.palindrome.service.JsonException;
 import com.example.palindrome.service.PalindromeServiceException;
 import com.example.palindrome.service.PalindromeServiceException.Causes;
 
-
 /**
  * Extend Jersey JAX-RS ResourceConfig class to define:
- * Resource classes
- * Use of Jackson Json provider
- * Exception mappers
- * Filters
+ *   Resource classes
+ *   Use of Jackson Json provider
+ *   Exception mappers
+ *   Filters.
  */
 @Component
 @ApplicationPath(value="/spring-boot-palindrome/api")
@@ -38,6 +36,9 @@ public class JerseyConfiguration extends ResourceConfig {
 
     private final static Logger log = LoggerFactory.getLogger(JerseyConfiguration.class);
     
+    /**
+     * Instantiates a new jersey configuration.
+     */
     public JerseyConfiguration() {
         this.register(JacksonFeature.class);
         
@@ -51,10 +52,24 @@ public class JerseyConfiguration extends ResourceConfig {
         
         this.property(ServerProperties.RESPONSE_SET_STATUS_OVER_SEND_ERROR, "true");
     }
-    
+
+    /**
+     * ExceptionMapper for PalindromeServiceException.
+     * It takes care of translating PalindromeServiceException into proper JAX-RS Response
+     * It follows following rules:
+     *    if PalindromeServiceException's cause is NoText: If request has text field empty: Returns 400 (BAD REQUEST)
+     *    if PalindromeServiceException's cause is PalindromeIdExpected: If palindromeId is missing: Returns 400 (BAD REQUEST)
+     *    if PalindromeServiceException's cause is PalindromeNotFound: If there is no palindrome by palindromeId: Returns 404 (NOT FOUND)
+     *    Else Returns 500 (INTERNAL SERVER ERROR).
+     */
     public static class PalindromeServiceExceptionMapper implements ExceptionMapper<PalindromeServiceException> {
 
-
+        /**
+         * @see javax.ws.rs.ext.ExceptionMapper#toResponse(java.lang.Throwable)
+         *
+         * @param exception
+         * @return
+         */
         @Override
         public Response toResponse(PalindromeServiceException exception) {
             if (exception.getExceptionCause() == Causes.NoText) {
@@ -78,8 +93,19 @@ public class JerseyConfiguration extends ResourceConfig {
         
     }
     
+    /**
+     * ExceptionMapper for JsonException.
+     * It takes care of translating JsonException into proper JAX-RS Response: 400 (BAD REQUEST).
+     *
+     */
     public static class JsonExceptionMapper implements ExceptionMapper<JsonException> {
 
+        /**
+         * @see javax.ws.rs.ext.ExceptionMapper#toResponse(java.lang.Throwable)
+         *
+         * @param exception
+         * @return
+         */
         @Override
         public Response toResponse(JsonException exception) {
             log.info("Translated exception: " + exception + " into HTTP Status Code 400.");
@@ -88,12 +114,22 @@ public class JerseyConfiguration extends ResourceConfig {
         
     }
     
+    /**
+     * Request filter to inject RequestId on context, to be used by slf4j.
+     */
     public static class RequestIdFilter implements ContainerRequestFilter {
 
+        /** The Constant RequestId. */
         public static final String RequestId = "RequestId";
         
         private AtomicLong counter = new AtomicLong(1);
         
+        /**
+         * @see javax.ws.rs.container.ContainerRequestFilter#filter(javax.ws.rs.container.ContainerRequestContext)
+         *
+         * @param requestContext
+         * @throws IOException
+         */
         @Override
         public void filter(ContainerRequestContext requestContext) throws IOException {
             MDC.put(RequestId, counter.getAndIncrement()); 

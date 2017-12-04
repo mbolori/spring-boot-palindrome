@@ -19,15 +19,22 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 @Configuration
 @EnableWebSecurity
 public class BasicWebSecurityConfiguration extends WebSecurityConfigurerAdapter   {
+    
+    /**
+     * @see org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter#configure(org.springframework.security.config.annotation.web.builders.HttpSecurity)
+     *
+     * @param http
+     * @throws Exception
+     */
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
         	.authorizeRequests()
-        		.antMatchers("/spring-boot-palindrome/api/**").hasRole("USER")
+        		.antMatchers("/spring-boot-palindrome/api/**").hasRole("USER")    //authentication: all endpoints require authorized user having "USER" role
         	.and()
-        		.httpBasic()
+        		.httpBasic() // all endpoints will be secured using http basic  Authorization: Basic base64-encoding of username:password,
         	.and()
-        		.sessionManagement()
+        		.sessionManagement()  // prevent Spring security to create a session: force client to add http basic authorization header on all the request ..
         			.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         	.and()
         		.headers()      // Adds the Security headers to the response.
@@ -38,11 +45,16 @@ public class BasicWebSecurityConfiguration extends WebSecurityConfigurerAdapter 
         			.disable();
     }
     
+    /**
+     * @see org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter#configure(org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder)
+     *
+     * @param auth
+     * @throws Exception
+     */
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+            //fill in memory authentiocation Manager with an user 
             auth.inMemoryAuthentication().withUser("user").password("password").roles("USER");
     }
-    
-// http.authorizeRequests().antMatchers("/**").hasRole("USER").and().httpBasic();
     
 }

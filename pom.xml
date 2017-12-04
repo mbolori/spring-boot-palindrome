@@ -53,13 +53,14 @@
 			<version>1.3.5.RELEASE</version>
         	<exclusions>
             	<exclusion>
-            		<!--  it is packaged with 0.7.4 version that gives problems -->
+            		<!--  it is packaged with 0.7.4 version that gives problems, so it is excluded -->
                 	<groupId>com.netflix.archaius</groupId>
                 	<artifactId>archaius-core</artifactId>
             	</exclusion>
         	</exclusions>
 		</dependency>
 
+		<!--  Use a archaius version without that problem -->
     	<dependency>
         	<groupId>com.netflix.archaius</groupId>
         	<artifactId>archaius-core</artifactId>
